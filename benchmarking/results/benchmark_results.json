@@ -1,0 +1,8 @@
+{
+  "model": "galaxy_lstm_20260212_154235.pth",
+  "samples": 20,
+  "Precision": 0.65,
+  "Recall": 0.65,
+  "Hit@5": 0.7,
+  "MRR": 0.677353888075171
+}

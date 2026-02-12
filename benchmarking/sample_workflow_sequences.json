@@ -1,0 +1,192 @@
+[
+  {
+    "context_tools": [
+      "Input dataset",
+      "InterProScan"
+    ],
+    "next_tool": "eggNOG Mapper"
+  },
+  {
+    "context_tools": [
+      "SortBED",
+      "ComplementBed",
+      "Filter",
+      "Filter",
+      "Intersect intervals"
+    ],
+    "next_tool": "Join two Datasets"
+  },
+  {
+    "context_tools": [
+      "Map empty/not empty collection to boolean ",
+      "Map empty/not empty collection to boolean ",
+      "MGnify amplicon summary tables",
+      "MGnify amplicon summary tables",
+      "MGnify amplicon summary tables"
+    ],
+    "next_tool": "MGnify amplicon summary tables"
+  },
+  {
+    "context_tools": [
+      "Paste",
+      "Paste",
+      "Manipulate AnnData",
+      "Scanpy FilterCells",
+      "AnnData Operations"
+    ],
+    "next_tool": "Inspect AnnData"
+  },
+  {
+    "context_tools": [
+      "Busco",
+      "BRAKER3",
+      "JBrowse",
+      "gffread",
+      "OMArk"
+    ],
+    "next_tool": "Busco"
+  },
+  {
+    "context_tools": [
+      "Input dataset",
+      "Input dataset",
+      "Construct Expression Set Object",
+      "Construct Expression Set Object",
+      "MuSiC Deconvolution"
+    ],
+    "next_tool": "MuSiC Deconvolution"
+  },
+  {
+    "context_tools": [
+      "Map empty/not empty collection to boolean ",
+      "Krona pie chart",
+      "Convert",
+      "Convert",
+      "Convert"
+    ],
+    "next_tool": "Convert"
+  },
+  {
+    "context_tools": [
+      "Samtools view",
+      "MultiQC",
+      "Stacks2: gstacks",
+      "Samtools stats",
+      "Stacks2: populations"
+    ],
+    "next_tool": "MultiQC"
+  },
+  {
+    "context_tools": [
+      "IDScoreSwitcher",
+      "FileInfo",
+      "FidoAdapter",
+      "FalseDiscoveryRate",
+      "IDFilter"
+    ],
+    "next_tool": "FileInfo"
+  },
+  {
+    "context_tools": [
+      "Bowtie2",
+      "Filter SAM or BAM, output SAM or BAM",
+      "MACS2 callpeak",
+      "Search in textfiles",
+      "Wig/BedGraph-to-bigWig"
+    ],
+    "next_tool": "MultiQC"
+  },
+  {
+    "context_tools": [
+      "BamLeftAlign",
+      "Filter BAM",
+      "FreeBayes",
+      "VCFfilter:",
+      "VCFtoTab-delimited:"
+    ],
+    "next_tool": "Cut"
+  },
+  {
+    "context_tools": [
+      "NetCDF xarray map plotting",
+      "NetCDF xarray map plotting",
+      "Merge collections",
+      "Merge collections",
+      "Image Montage"
+    ],
+    "next_tool": "Image Montage"
+  },
+  {
+    "context_tools": [
+      "Copernicus Data Space Ecosystem"
+    ],
+    "next_tool": "Holoviz"
+  },
+  {
+    "context_tools": [
+      "Input dataset",
+      "Input dataset",
+      "Trim Galore!",
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM"
+    ],
+    "next_tool": "Samtools fastx"
+  },
+  {
+    "context_tools": [
+      "Search GUI",
+      "Peptide Shaker",
+      "mz to sqlite",
+      "Query Tabular",
+      "Query Tabular"
+    ],
+    "next_tool": "Tabular-to-FASTA"
+  },
+  {
+    "context_tools": [
+      "Input dataset",
+      "Inspect AnnData",
+      "Inspect AnnData",
+      "Inspect AnnData",
+      "Transpose"
+    ],
+    "next_tool": "Monocle3 create"
+  },
+  {
+    "context_tools": [
+      "Busco",
+      "Chromeister",
+      "Meryl",
+      "Merqury",
+      "Merqury"
+    ],
+    "next_tool": "Merqury"
+  },
+  {
+    "context_tools": [
+      "iCFree sampler",
+      "iCFree plate designer"
+    ],
+    "next_tool": "iCFree instructor"
+  },
+  {
+    "context_tools": [
+      "Shovill",
+      "Shovill",
+      "hamronize: summarize",
+      "SeqSero2",
+      "sistr_cmd"
+    ],
+    "next_tool": "MOB-Recon"
+  },
+  {
+    "context_tools": [
+      "Cut",
+      "Cut",
+      "Fit a BUM model",
+      "Calculate a Heinz score",
+      "Identify optimal scoring subnetwork"
+    ],
+    "next_tool": "Visualize"
+  }
+]
