@@ -1,0 +1,7 @@
+neo4j>=5.14.0
+pydantic>=2.0.0
+torch>=2.0.0
+matplotlib
+numpy
+pandas
+scikit-learn
