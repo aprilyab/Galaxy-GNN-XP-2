@@ -36,14 +36,6 @@ ENV/
 env.bak
 venv.bak
 
-# PyTorch / Models
-# Large model files should usually be ignored unless explicitly needed
-# models/*.pth
-
-# Data
-# Processed data can be large
-# data/processed/
-
 # OS
 .DS_Store
 .DS_Store?
@@ -52,3 +44,8 @@ venv.bak
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Project Specific
+data/
+Outputs/
+!reports/*.md
