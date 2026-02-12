@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional
+from typing import List, Optional,Dict
 from pydantic import BaseModel, Field
 
 class NodeSpec(BaseModel):
@@ -30,9 +30,17 @@ class Neo4jConfig(BaseModel):
     password: str = Field(default_factory=lambda: os.getenv("NEO4J_PASSWORD", "password"))
 
 # Workflow specific output models
+class StepMetadata(BaseModel):
+    step_id: str
+    tool_id: Optional[str] = None
+    tool_name: Optional[str] = None
+    tool_version: Optional[str] = None
+    next_steps: List[str] = []
+
 class WorkflowSequence(BaseModel):
     workflow_id: str
     steps: List[str]
+    steps_metadata: Dict[str, StepMetadata] = {} # Map of step_id to details
     branching_steps: List[str] = []
     missing_next_step: List[str] = []
     steps_without_tools: List[str] = []
