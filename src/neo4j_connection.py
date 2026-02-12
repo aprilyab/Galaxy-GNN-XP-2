@@ -1,13 +1,52 @@
-from typing import List, Dict, Any, Generator, Tuple
-from neo4j import Session
-from src.logger import logger
+from neo4j import GraphDatabase, Driver, Session
+from contextlib import contextmanager
+from typing import Generator, List, Dict, Any, Tuple
+from time import sleep
+from src.schema_models import Neo4jConfig
+from src.utils import setup_logger
+
+logger = setup_logger("database", "extraction.log")
+
+class Neo4jConnector:
+    def __init__(self, config: Neo4jConfig):
+        self._uri = config.uri
+        self._user = config.user
+        self._password = config.password
+        self._driver = None
+
+    def connect(self, retries: int = 3, delay: int = 2):
+        if not self._driver:
+            for attempt in range(retries):
+                try:
+                    self._driver = GraphDatabase.driver(self._uri, auth=(self._user, self._password))
+                    self._driver.verify_connectivity()
+                    logger.info(f"Connected to Neo4j at {self._uri}")
+                    return
+                except Exception as e:
+                    if attempt < retries - 1:
+                        sleep(delay)
+                    else:
+                        raise
+
+    def close(self):
+        if self._driver:
+            self._driver.close()
+
+    @contextmanager
+    def session(self) -> Generator[Session, None, None]:
+        if not self._driver:
+            self.connect()
+        session = self._driver.session()
+        try:
+            yield session
+        finally:
+            session.close()
 
 class Neo4jExtractor:
     def __init__(self, session: Session):
         self.session = session
 
     def fetch_workflow_ids(self, limit: int = 1000, skip: int = 0) -> List[str]:
-        """Fetches a batch of workflow IDs."""
         query = """
         MATCH (w:Workflow)
         RETURN w.workflow_id as workflow_id
@@ -18,10 +57,6 @@ class Neo4jExtractor:
         return [record["workflow_id"] for record in result]
 
     def fetch_batch_workflow_data(self, workflow_ids: List[str]) -> Dict[str, Dict[str, Any]]:
-        """
-        Fetches steps for a batch of workflows in a single query to avoid N+1 issues.
-        Returns a nested dict: {workflow_id: {step_id: step_data}}
-        """
         query = """
         MATCH (w:Workflow)-[:HAS_STEP]->(s:Step)
         WHERE w.workflow_id IN $workflow_ids
@@ -32,49 +67,29 @@ class Neo4jExtractor:
             s.step_id as step_id, 
             s.name as step_name, 
             t.tool_id as tool_id,
+            t.version as tool_version,
             collect(next.step_id) as next_step_ids
         """
         result = self.session.run(query, workflow_ids=workflow_ids)
-        
         workflows_data = {wid: {} for wid in workflow_ids}
-        
         for record in result:
-            wid = record["workflow_id"]
-            step_id = record["step_id"]
-            
-            # Basic validation for step_id uniqueness within workflow could be done here 
-            # or implicitly handled by dict overwrite (last wins). 
-            # We'll log if we see it twice? 
-            # For performance, we assume standard overwrite but could check.
-            
-            workflows_data[wid][step_id] = {
-                "step_id": step_id,
+            workflows_data[record["workflow_id"]][record["step_id"]] = {
+                "step_id": record["step_id"],
                 "name": record["step_name"],
                 "tool_id": record["tool_id"],
+                "tool_version": record["tool_version"],
                 "next_steps": record["next_step_ids"]
             }
-            
         return workflows_data
 
     def extract_workflows_batch(self, batch_size: int = 100) -> Generator[Tuple[str, Dict[str, Any]], None, None]:
-        """
-        Yields workflow data (id, steps_dict) in batches using pagination.
-        Optimized to fetch step data for the entire batch at once.
-        """
         skip = 0
         while True:
-            # 1. Get Batch of IDs
             workflow_ids = self.fetch_workflow_ids(limit=batch_size, skip=skip)
             if not workflow_ids:
                 break
-            
-            # 2. Fetch Data for Batch
             batch_data = self.fetch_batch_workflow_data(workflow_ids)
-            
-            # 3. Yield results
             for wid in workflow_ids:
-                # pass empty dict if no steps found (though unusual)
                 yield wid, batch_data.get(wid, {})
-            
             skip += batch_size
-            logger.info(f"Processed batch starting at offset {skip}")
+            logger.info(f"Extracted batch at offset {skip}")
