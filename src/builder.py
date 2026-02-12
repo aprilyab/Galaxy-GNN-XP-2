@@ -93,6 +93,16 @@ class SequenceBuilder:
         return WorkflowSequence(
             workflow_id=workflow_id,
             steps=sequence,
+            steps_metadata={
+                sid: {
+                    "step_id": sid,
+                    "tool_id": steps_graph[sid]["tool_id"],
+                    "tool_name": steps_graph[sid].get("name"),
+                    "tool_version": steps_graph[sid].get("tool_version"),
+                    "next_steps": steps_graph[sid]["next_steps"]
+                }
+                for sid in sequence
+            },
             branching_steps=list(branching_steps),
             missing_next_step=list(missing_next),
             steps_without_tools=list(no_tools),
