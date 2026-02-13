@@ -13,7 +13,6 @@ class SequenceBuilder:
         missing_next = set()
         no_tools = set()
         cycles_detected = []
-
         all_step_ids = set(steps_graph.keys())
         target_step_ids = set()
         for s in steps_graph.values():
