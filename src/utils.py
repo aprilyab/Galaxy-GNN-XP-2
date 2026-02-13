@@ -4,8 +4,9 @@ import json
 import csv
 import torch
 import random
+import networkx as nx
 from pathlib import Path
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Set
 from logging.handlers import RotatingFileHandler
 
 def setup_logger(name: str, log_file: str = "project.log", level: int = logging.INFO) -> logging.Logger:
@@ -69,20 +70,48 @@ class Vocabulary:
         return v
 
 class SequenceDataset:
-    def __init__(self, sequences: List[List[str]], vocab: Vocabulary, context_len: int = 5):
+    def __init__(
+        self, 
+        sequences: List[List[str]], 
+        vocab: Vocabulary, 
+        context_len: int = 5,
+        negative_candidates: Optional[Dict[int, List[int]]] = None,
+        num_negatives: int = 5
+    ):
         self.X, self.y = [], []
+        self.negatives = []
         pad_idx = vocab.stoi["<PAD>"]
+        
         for seq in sequences:
             ids = vocab.encode(seq)
             for i in range(1, len(ids)):
                 target = ids[i]
                 ctx = ids[:i]
+                
+                # Determine current tool for negative sampling
+                current_tool_idx = ctx[-1]
+                
                 if len(ctx) < context_len:
                     ctx = [pad_idx] * (context_len - len(ctx)) + ctx
                 else:
                     ctx = ctx[-context_len:]
+                
                 self.X.append(torch.tensor(ctx, dtype=torch.long))
                 self.y.append(torch.tensor(target, dtype=torch.long))
+                
+                if negative_candidates and current_tool_idx in negative_candidates:
+                    cands = negative_candidates[current_tool_idx]
+                    if cands:
+                        negs = random.choices(cands, k=num_negatives)
+                        self.negatives.append(torch.tensor(negs, dtype=torch.long))
+                    else:
+                        # Fallback: random from vocab excluding target
+                        all_ids = list(vocab.stoi.values())
+                        negs = [random.choice(all_ids) for _ in range(num_negatives)]
+                        self.negatives.append(torch.tensor(negs, dtype=torch.long))
+                else:
+                     # No candidates provided or tool not in map
+                     self.negatives.append(torch.zeros(num_negatives, dtype=torch.long))
 
 def split_workflows(sequences: List[List[str]], test_size: float = 0.1, val_size: float = 0.1):
     unique = [list(s) for s in sorted(list(set(tuple(x) for x in sequences)))]
@@ -92,7 +121,47 @@ def split_workflows(sequences: List[List[str]], test_size: float = 0.1, val_size
     te, va = int(n * test_size), int(n * val_size)
     return unique[te+va:], unique[te:te+va], unique[:te]
 
+
+
+def build_transition_graph(sequences: List[List[str]]) -> nx.DiGraph:
+    graph = nx.DiGraph()
+    for seq in sequences:
+        for i in range(len(seq) - 1):
+            if seq[i] and seq[i+1]:
+                graph.add_edge(seq[i], seq[i+1])
+    return graph
+
+def get_negative_candidates(
+    graph: nx.DiGraph, 
+    vocab: Vocabulary, 
+    exclude_special: bool = True
+) -> Dict[int, List[int]]:
+    candidates = {}
+    all_tokens = set(vocab.stoi.values())
+    
+    special_indices = {vocab.stoi[t] for t in ["<PAD>", "<UNK>", "<INPUT_DATA>"] if t in vocab.stoi}
+    
+    for token, idx in vocab.stoi.items():
+        if exclude_special and idx in special_indices:
+            candidates[idx] = []
+            continue
+            
+        successors = set()
+        if graph.has_node(token):
+            successors = {vocab.stoi[n] for n in graph.successors(token) if n in vocab.stoi}
+            
+        # Candidates = All - (Successors + Self + Special)
+        valid = list(all_tokens - successors - {idx} - (special_indices if exclude_special else set()))
+        if not valid:
+             # Fallback if everything is connected (unlikely): sample from all except self
+             valid = list(all_tokens - {idx})
+        
+        candidates[idx] = valid
+        
+    return candidates
+
 def generate_negative_samples(vocab: Vocabulary, num_samples: int) -> torch.Tensor:
+    # Deprecated random sampling, keeping for backward compatibility if needed
     all_ids = list(vocab.stoi.values())
     neg = [[random.choice(all_ids), random.choice(all_ids)] for _ in range(num_samples)]
     return torch.tensor(neg, dtype=torch.long)
