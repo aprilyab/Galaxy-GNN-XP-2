@@ -36,7 +36,7 @@ def save_tsv(data: List[Dict], filepath: Path, headers: List[str]):
             writer.writerow([row.get(h, "") for h in headers])
 
 class Vocabulary:
-    def __init__(self, special_tokens: List[str] = ["<PAD>", "<UNK>", "<INPUT_DATA>"]):
+    def __init__(self, special_tokens: List[str] = ["<PAD>", "<UNK>"]):
         self.stoi: Dict[str, int] = {}
         self.itos: Dict[int, str] = {}
         for token in special_tokens:

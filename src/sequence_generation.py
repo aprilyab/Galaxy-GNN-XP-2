@@ -96,5 +96,8 @@ def topological_sort(steps_metadata: Dict[str, StepMetadata]) -> List[str]:
 def process_workflow(wf: WorkflowSequence) -> List[str]:
     if wf.steps_metadata:
         sorted_ids = topological_sort(wf.steps_metadata)
-        return [clean_tool_id(wf.steps_metadata[sid].tool_id, wf.steps_metadata[sid].tool_name) for sid in sorted_ids]
-    return [clean_tool_id(tid) for tid in wf.steps]
+        full_seq = [clean_tool_id(wf.steps_metadata[sid].tool_id, wf.steps_metadata[sid].tool_name) for sid in sorted_ids]
+        return [tool for tool in full_seq if tool != "<INPUT_DATA>"]
+    
+    full_seq = [clean_tool_id(tid) for tid in wf.steps]
+    return [tool for tool in full_seq if tool != "<INPUT_DATA>"]
