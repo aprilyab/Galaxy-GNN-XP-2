@@ -5,7 +5,7 @@ from src.utils import Vocabulary, SequenceDataset, build_transition_graph, get_n
 
 class TestNegativeSampling(unittest.TestCase):
     def setUp(self):
-        self.vocab = Vocabulary(special_tokens=["<PAD>", "<UNK>", "<INPUT_DATA>"])
+        self.vocab = Vocabulary(special_tokens=["<PAD>", "<UNK>"])
         # Add basic tools
         self.tools = ["T1", "T2", "T3", "T4", "T5"]
         for t in self.tools:

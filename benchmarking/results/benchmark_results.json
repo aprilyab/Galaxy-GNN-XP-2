@@ -1,8 +1,8 @@
 {
-  "model": "galaxy_lstm_20260212_154235.pth",
+  "model": "best_galaxy_lstm_opt_20260214_100048.pth",
   "samples": 20,
-  "Precision": 0.65,
-  "Recall": 0.65,
-  "Hit@5": 0.7,
-  "MRR": 0.677353888075171
+  "Precision": 0.5,
+  "Recall": 0.5,
+  "Hit@5": 0.75,
+  "MRR": 0.636659274529402
 }

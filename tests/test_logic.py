@@ -55,5 +55,22 @@ class TestLogic(unittest.TestCase):
         self.assertTrue(len(seq.cycles_detected) > 0)
         self.assertEqual(set(seq.steps), {"1", "2"})
 
+    def test_process_workflow_filters_input(self):
+        from src.sequence_generation import process_workflow
+        from src.schema_models import WorkflowSequence, StepMetadata
+        
+        # Scenario: T1 -> T2, with T1 being an input/null tool
+        wf = WorkflowSequence(
+            workflow_id="wf3",
+            steps=["1", "2"],
+            steps_metadata={
+                "1": StepMetadata(step_id="1", tool_id=None, next_steps=["2"]),
+                "2": StepMetadata(step_id="2", tool_id="T2", next_steps=[])
+            }
+        )
+        # process_workflow should return only ["T2"] because "1" resolves to <INPUT_DATA>
+        result = process_workflow(wf)
+        self.assertEqual(result, ["T2"])
+
 if __name__ == "__main__":
     unittest.main()
