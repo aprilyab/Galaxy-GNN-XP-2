@@ -14,11 +14,15 @@ This report compares the performance of the Galaxy Tool Prediction LSTM model ac
 | **Hit@5**     | 0.700                  | **0.900**                    | 0.750                     |
 | **MRR**       | 0.677                  | **0.831**                    | 0.637                     |
 
-### Analysis
-- **First Tuning (Best Performance)**: The High Capacity model (Bi-LSTM, 256 hidden units) achieved the best results across all metrics (Hit@5: 90%).
-- **Second Tuning**: Reducing model size and increasing regularization led to underfitting.
 
-## Training Convergence & Configuration
+
+
+### Analysis
+### 2. First Tuning (High Capacity) - 
+-The High Capacity model (Bi-LSTM, 256 hidden units) achieved the best results across all metrics (Hit@5: 90%).
+- **Architecture**: Bi-directional LSTM (Embed=128, Hidden=256)
+- **Regularization**: Dropout=0.3
+- **Loss**: CrossEntropy
 #  Hyperparameter Configuration
 
 ##config = {
@@ -34,22 +38,29 @@ This report compares the performance of the Galaxy Tool Prediction LSTM model ac
     "grad_clip": 1.0,
     "label_smoothing": 0.1
 }
-
-### 1. Baseline (Before Tuning)
-![Baseline Loss](/home/henok/Desktop/Galaxy-GNN-XP-2/reports/Traning_loss_before_HP_Tunning.png)
-
-### 2. First Tuning (High Capacity) - 
-- **Architecture**: Bi-directional LSTM (Embed=128, Hidden=256)
-- **Regularization**: Dropout=0.3
-- **Loss**: CrossEntropy
-
-![First Tuning Loss](/home/henok/Desktop/Galaxy-GNN-XP-2/reports/traing%20vs%20validation_loss_after_HR_tunning.png)
+ - **Early Stoping**: happens on the 19th epoch.
 
 ### 3. Second Tuning (Optimized)
+-  Reducing model size and increasing regularization led to underfitting.
 - **Architecture**: Unidirectional LSTM (Embed=64, Hidden=128)
-- **Regularization**: Dropout=0.5, Ranking Loss
+- **Regularization**: Dropout=0.5, 
+- **Loss**:Ranking Loss + CrossEntropy
+#  Hyperparameter Configuration
 
-![Second Tuning Loss](/home/henok/Desktop/Galaxy-GNN-XP-2/reports/loss_convergence_report.png)
+##config = {
+    "batch_size": 64,
+    "epochs": 50,
+    "lr": 1e-3,
+    "embed_dim": 64,
+    "hidden_dim": 128,
+    "num_layers": 2,
+    "dropout": 0.5,
+    "weight_decay": 1e-4,
+    "patience": 7,
+    "grad_clip": 1.0,
+    "label_smoothing": 0.1
+}
+ - **Early Stoping**: happens on the 34th epoch.
 
 ## Model Paths
 - **Best Model (First Tuning)**: `/home/henok/Desktop/Galaxy-GNN-XP-2/Outputs/best_galaxy_lstm_20260213_221606.pth`
