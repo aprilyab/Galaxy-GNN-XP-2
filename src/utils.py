@@ -159,9 +159,3 @@ def get_negative_candidates(
         candidates[idx] = valid
         
     return candidates
-
-def generate_negative_samples(vocab: Vocabulary, num_samples: int) -> torch.Tensor:
-    # Deprecated random sampling, keeping for backward compatibility if needed
-    all_ids = list(vocab.stoi.values())
-    neg = [[random.choice(all_ids), random.choice(all_ids)] for _ in range(num_samples)]
-    return torch.tensor(neg, dtype=torch.long)
