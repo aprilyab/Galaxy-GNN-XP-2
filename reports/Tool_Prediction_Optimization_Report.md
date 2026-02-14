@@ -54,7 +54,6 @@ config = {
 ```
 * **Early Stopping**: Epoch 19
 
-![First Tuning Loss](traing_vs_validation_loss_after_HR_tunning.png)
 
 ---
 
@@ -84,7 +83,7 @@ config = {
 ```
 * **Early Stopping**: Epoch 34
 
-![Second Tuning Loss](loss_convergence_report.png)
+![Second Tuning Loss](traing_vs_validation_loss_after_HR_tunning.png)
 
 ---
 
