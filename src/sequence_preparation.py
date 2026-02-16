@@ -65,7 +65,7 @@ def main():
             y_df = pd.DataFrame(y_data, columns=['target'])
             y_df.to_csv(OUT / f"y_{name}.csv", index=False)
             
-            # Save negatives as CSV if available
+            # Save negatives as CSV
             if ds.negatives:
                 neg_data = [neg.tolist() for neg in ds.negatives]
                 neg_df = pd.DataFrame(neg_data, columns=[f'neg_{i}' for i in range(len(neg_data[0]))])
