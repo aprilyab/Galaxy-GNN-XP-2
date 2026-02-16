@@ -82,7 +82,7 @@ class SequenceDataset:
         vocab: Vocabulary, 
         context_len: int = 5,
         negative_candidates: Optional[Dict[int, List[int]]] = None,
-        num_negatives: int = 5
+        num_negatives: int = 3
     ):
         self.X, self.y = [], []
         self.negatives = []

@@ -1,0 +1,18 @@
+2026-02-15 23:42:47,869 - processing - INFO - Loaded 685 workflows.
+2026-02-15 23:42:47,940 - processing - INFO - Cleaned 685 sequences.
+2026-02-15 23:42:48,170 - processing - INFO - Built transition graph and negative candidates.
+2026-02-15 23:42:50,283 - processing - INFO - Saved train tensors.
+2026-02-15 23:42:50,381 - processing - INFO - Saved val tensors.
+2026-02-15 23:42:50,587 - processing - INFO - Saved test tensors.
+2026-02-16 10:53:21,338 - processing - INFO - Loaded 685 workflows.
+2026-02-16 10:53:21,439 - processing - INFO - Cleaned 685 sequences.
+2026-02-16 10:53:22,013 - processing - INFO - Built transition graph and negative candidates.
+2026-02-16 10:53:22,907 - processing - INFO - Saved train tensors.
+2026-02-16 10:53:23,028 - processing - INFO - Saved val tensors.
+2026-02-16 10:53:23,073 - processing - INFO - Saved test tensors.
+2026-02-16 11:59:42,303 - processing - INFO - Loaded 685 workflows.
+2026-02-16 11:59:42,368 - processing - INFO - Cleaned 685 sequences.
+2026-02-16 11:59:42,501 - processing - INFO - Built transition graph and negative candidates.
+2026-02-16 11:59:43,305 - processing - INFO - Saved train CSV files.
+2026-02-16 11:59:43,378 - processing - INFO - Saved val CSV files.
+2026-02-16 11:59:43,424 - processing - INFO - Saved test CSV files.

@@ -8,12 +8,11 @@ This report compares the performance of the Galaxy Tool Prediction LSTM model ac
 3.  **Second Tuning (Optimized)**: Reduced capacity (64/128 Uni-LSTM) with aggressive regularization and Ranking Loss.
 
 ## Performance Evolution
-| Metric      | Baseline (Before Tuning) | First Tuning (High Capacity) | Second Tuning (Optimized) |
-| :---        | :---:                    | :---:                        | :---:                     |
-| **Precision** | 0.650                  | 0.750                        | 0.500                     |
-| **Recall**    | 0.650                  | 0.750                        | 0.500                     |
-| **Hit@5**     | 0.700                  | **0.900**                    | 0.750                     |
-| **MRR**       | 0.677                  | **0.831**                    | 0.637                     |
+| Metric      | Baseline | Stage 2 | Stage 3 | Stage 4 | Stage 5 (Refined) |
+| :---        | :---:    | :---:   | :---:   | :---:   | :---:           |
+| **Val Loss**  | -        | -       | 5.699   | 5.462   | **5.066**       |
+| **Hit@1**     | -        | -       | 0.271   | 0.258   | 0.259           |
+| **Hit@5**     | 0.700    | 0.900   | 0.750   | 0.420   | 0.427           |
 
 ### Comparative Analysis
 - **First Tuning (Best Performance)**: The High Capacity model (Bi-LSTM, 256 hidden units) achieved the best results across all metrics (Hit@5: 90%). It effectively captured complex dependencies but carried a higher risk of overfitting if trained too long.
@@ -84,6 +83,21 @@ config = {
 * **Early Stopping**: Epoch 34
 
 ![Second Tuning Loss](traing_vs_validation_loss_after_HR_tunning.png)
+
+---
+
+## 5. Stage 5: Refined Architecture (Current)
+Switched to high-capacity LSTM (512 units) with Last Hidden State logic and denoised data.
+
+### Model Configuration
+- **Architecture**: Unidirectional LSTM (Last Hidden State)
+- **Embedding/Hidden**: 256 / 512
+- **Regularization**: Dropout 0.4
+- **Loss**: Ranking Loss (1:3) + CE with Label Smoothing
+
+* **Early Stopping**: Epoch 17 (Best at 7)
+* **Best Val Loss**: 5.0666
+* **Observation**: Significant drop in loss, but high overfitting gap (Train 2.1 vs Val 5.1).
 
 ---
 
