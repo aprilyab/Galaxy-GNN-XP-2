@@ -8,6 +8,12 @@ import networkx as nx
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional, Set
 from logging.handlers import RotatingFileHandler
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 def setup_logger(name: str, log_file: str = "project.log", level: int = logging.INFO) -> logging.Logger:
     logger = logging.getLogger(name)

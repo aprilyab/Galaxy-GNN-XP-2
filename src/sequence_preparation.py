@@ -2,9 +2,16 @@ import torch
 from pathlib import Path
 from typing import List
 
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+
 from src.sequence_generation import process_workflow
 from src.schema_models import WorkflowSequence
-from src.utils import setup_logger, save_json, Vocabulary, SequenceDataset, split_workflows, generate_negative_samples, build_transition_graph, get_negative_candidates
+from src.utils import setup_logger, save_json, Vocabulary, SequenceDataset, split_workflows, build_transition_graph, get_negative_candidates
 
 logger = setup_logger("processing", "processing.log")
 
