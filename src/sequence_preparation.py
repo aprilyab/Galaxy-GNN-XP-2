@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 from pathlib import Path
 from typing import List
 
@@ -50,17 +51,27 @@ def main():
     for name, seqs in [("train", train_s), ("val", val_s), ("test", test_s)]:
         if not seqs: continue
         
-        
         ds = SequenceDataset(seqs, vocab, negative_candidates=neg_candidates)
         if ds.X:
-            torch.save(torch.stack(ds.X), OUT / f"X_{name}.pt")
-            torch.save(torch.stack(ds.y), OUT / f"y_{name}.pt")
+            # Convert tensors to lists for CSV
+            X_data = [x.tolist() for x in ds.X]
+            y_data = [y.item() for y in ds.y]
             
-            # Save the new negatives list (stack it)
+            # Save X as CSV
+            X_df = pd.DataFrame(X_data, columns=[f'context_{i}' for i in range(len(X_data[0]))])
+            X_df.to_csv(OUT / f"X_{name}.csv", index=False)
+            
+            # Save y as CSV
+            y_df = pd.DataFrame(y_data, columns=['target'])
+            y_df.to_csv(OUT / f"y_{name}.csv", index=False)
+            
+            # Save negatives as CSV if available
             if ds.negatives:
-                torch.save(torch.stack(ds.negatives), OUT / f"{name}_neg.pt")
+                neg_data = [neg.tolist() for neg in ds.negatives]
+                neg_df = pd.DataFrame(neg_data, columns=[f'neg_{i}' for i in range(len(neg_data[0]))])
+                neg_df.to_csv(OUT / f"{name}_negatives.csv", index=False)
             
-            logger.info(f"Saved {name} tensors.")
+            logger.info(f"Saved {name} CSV files.")
 
 if __name__ == "__main__":
     main()
