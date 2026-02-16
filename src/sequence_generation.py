@@ -101,10 +101,18 @@ def topological_sort(steps_metadata: Dict[str, StepMetadata]) -> List[str]:
     return sorted_steps
 
 def process_workflow(wf: WorkflowSequence) -> List[str]:
+    # Tools to ignore during sequence generation to reduce noise
+    GENERIC_TOOLS = {
+        "Input dataset", 
+        "Input parameter", 
+        "Input dataset collection", 
+        "<INPUT_DATA>"
+    }
+    
     if wf.steps_metadata:
         sorted_ids = topological_sort(wf.steps_metadata)
         full_seq = [clean_tool_id(wf.steps_metadata[sid].tool_id, wf.steps_metadata[sid].tool_name) for sid in sorted_ids]
-        return [tool for tool in full_seq if tool != "<INPUT_DATA>"]
+        return [tool for tool in full_seq if tool not in GENERIC_TOOLS]
     
     full_seq = [clean_tool_id(tid) for tid in wf.steps]
-    return [tool for tool in full_seq if tool != "<INPUT_DATA>"]
+    return [tool for tool in full_seq if tool not in GENERIC_TOOLS]
