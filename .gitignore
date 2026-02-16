@@ -48,3 +48,5 @@ Thumbs.db
 # Project Specific
 data/
 Outputs/
+
+*.log
