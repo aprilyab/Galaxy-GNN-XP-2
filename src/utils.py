@@ -15,6 +15,17 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 
+def strip_tool_version(tool_id: str) -> str:
+    """Removes the version suffix from Galaxy tool IDs to reduce sparsity."""
+    if not tool_id or tool_id in ["Input", "<INPUT_DATA>"]:
+        return tool_id
+    if "/" in tool_id:
+        parts = tool_id.split("/")
+        if len(parts) > 1:
+            return "/".join(parts[:-1])
+    return tool_id
+
+
 def setup_logger(name: str, log_file: str = "project.log", level: int = logging.INFO) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -55,9 +66,18 @@ class Vocabulary:
             self.itos[idx] = token
         return self.stoi[token]
 
-    def build_from_sequences(self, sequences: List[List[str]]):
+    def build_from_sequences(self, sequences: List[List[str]], min_count: int = 1):
+        """Builds vocabulary strictly from the provided sequences (typically training set)."""
+        counts = {}
         for seq in sequences:
-            for tool in seq: self.add_token(tool)
+            for tool in seq:
+                counts[tool] = counts.get(tool, 0) + 1
+        
+        # Sort by frequency 
+        sorted_tools = sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+        for tool, count in sorted_tools:
+            if count >= min_count:
+                self.add_token(tool)
 
     def encode(self, seq: List[str]) -> List[int]:
         return [self.stoi.get(t, self.stoi["<UNK>"]) for t in seq]
@@ -80,7 +100,7 @@ class SequenceDataset:
         self, 
         sequences: List[List[str]], 
         vocab: Vocabulary, 
-        context_len: int = 5,
+        context_len: int = 25,
         negative_candidates: Optional[Dict[int, List[int]]] = None,
         num_negatives: int = 3
     ):
@@ -88,7 +108,7 @@ class SequenceDataset:
         self.negatives = []
         pad_idx = vocab.stoi["<PAD>"]
         
-        
+       
         special_indices = {vocab.stoi[t] for t in ["<PAD>", "<UNK>"] if t in vocab.stoi}
         all_valid_ids = [idx for idx in vocab.stoi.values() if idx not in special_indices]
         
@@ -109,7 +129,7 @@ class SequenceDataset:
                 self.X.append(torch.tensor(ctx, dtype=torch.long))
                 self.y.append(torch.tensor(target, dtype=torch.long))
                 
-                # Important: Negative sampling based on the current tool's successors in the graph
+                # Negative sampling based on the connection-level logic
                 negs = []
                 if negative_candidates and current_tool_idx in negative_candidates:
                     cands = negative_candidates[current_tool_idx]
@@ -118,19 +138,30 @@ class SequenceDataset:
                     elif len(cands) > 0:
                         negs = random.choices(cands, k=num_negatives)
                 
-                # Fallback: if no candidates, pick random tools that aren't the target
-                if not negs:
-                    possible_fallbacks = [idx for idx in all_valid_ids if idx != target]
-                    negs = random.choices(possible_fallbacks, k=num_negatives)
+             
+                if not negs and all_valid_ids:
+             
+                    potential_random = [idx for idx in all_valid_ids if idx != target]
+                    if potential_random:
+                        negs = random.choices(potential_random, k=num_negatives)
                 
+               
+                if not negs:
+                    negs = [vocab.stoi["<UNK>"]] * num_negatives
+
                 self.negatives.append(torch.tensor(negs, dtype=torch.long))
+
 def split_workflows(sequences: List[List[str]], test_size: float = 0.1, val_size: float = 0.1):
-    unique = [list(s) for s in sorted(list(set(tuple(x) for x in sequences)))]
+    """
+    Split sequences without deduplication to preserve pattern frequency weight.
+    Shuffle the full connection pool.
+    """
+    data = list(sequences)
     random.seed(42)
-    random.shuffle(unique)
-    n = len(unique)
+    random.shuffle(data)
+    n = len(data)
     te, va = int(n * test_size), int(n * val_size)
-    return unique[te+va:], unique[te:te+va], unique[:te]
+    return data[te+va:], data[te:te+va], data[:te]
 
 
 
@@ -161,10 +192,10 @@ def get_negative_candidates(
         if graph.has_node(token):
             successors = {vocab.stoi[n] for n in graph.successors(token) if n in vocab.stoi}
             
-        # Candidates = All - (Successors + Self + Special)
+    
         valid = list(all_tokens - successors - {idx} - (special_indices if exclude_special else set()))
         if not valid:
-             # Fallback if everything is connected (unlikely): sample from all except self
+            
              valid = list(all_tokens - {idx})
         
         candidates[idx] = valid
