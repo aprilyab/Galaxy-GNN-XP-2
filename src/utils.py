@@ -88,6 +88,10 @@ class SequenceDataset:
         self.negatives = []
         pad_idx = vocab.stoi["<PAD>"]
         
+        
+        special_indices = {vocab.stoi[t] for t in ["<PAD>", "<UNK>"] if t in vocab.stoi}
+        all_valid_ids = [idx for idx in vocab.stoi.values() if idx not in special_indices]
+        
         for seq in sequences:
             ids = vocab.encode(seq)
             for i in range(1, len(ids)):
@@ -105,20 +109,21 @@ class SequenceDataset:
                 self.X.append(torch.tensor(ctx, dtype=torch.long))
                 self.y.append(torch.tensor(target, dtype=torch.long))
                 
+                # Important: Negative sampling based on the current tool's successors in the graph
+                negs = []
                 if negative_candidates and current_tool_idx in negative_candidates:
                     cands = negative_candidates[current_tool_idx]
-                    if cands:
+                    if len(cands) >= num_negatives:
+                        negs = random.sample(cands, k=num_negatives)
+                    elif len(cands) > 0:
                         negs = random.choices(cands, k=num_negatives)
-                        self.negatives.append(torch.tensor(negs, dtype=torch.long))
-                    else:
-                        # Fallback: random from vocab excluding target
-                        all_ids = list(vocab.stoi.values())
-                        negs = [random.choice(all_ids) for _ in range(num_negatives)]
-                        self.negatives.append(torch.tensor(negs, dtype=torch.long))
-                else:
-                     # No candidates provided or tool not in map
-                     self.negatives.append(torch.zeros(num_negatives, dtype=torch.long))
-
+                
+                # Fallback: if no candidates, pick random tools that aren't the target
+                if not negs:
+                    possible_fallbacks = [idx for idx in all_valid_ids if idx != target]
+                    negs = random.choices(possible_fallbacks, k=num_negatives)
+                
+                self.negatives.append(torch.tensor(negs, dtype=torch.long))
 def split_workflows(sequences: List[List[str]], test_size: float = 0.1, val_size: float = 0.1):
     unique = [list(s) for s in sorted(list(set(tuple(x) for x in sequences)))]
     random.seed(42)
