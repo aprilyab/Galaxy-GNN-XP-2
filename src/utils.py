@@ -151,17 +151,44 @@ class SequenceDataset:
 
                 self.negatives.append(torch.tensor(negs, dtype=torch.long))
 
-def split_workflows(sequences: List[List[str]], test_size: float = 0.1, val_size: float = 0.1):
+def split_workflows(sequences: List[List[str]], test_size: float = 0.15, val_size: float = 0.15, 
+                   stratify_by_length: bool = True):
     """
-    Split sequences without deduplication to preserve pattern frequency weight.
-    Shuffle the full connection pool.
+    Enhanced split with stratification by sequence length for better distribution.
     """
-    data = list(sequences)
-    random.seed(42)
-    random.shuffle(data)
-    n = len(data)
-    te, va = int(n * test_size), int(n * val_size)
-    return data[te+va:], data[te:te+va], data[:te]
+    if stratify_by_length:
+        # Sort by length for stratified splitting
+        sorted_sequences = sorted(sequences, key=len)
+        n = len(sorted_sequences)
+        
+        # Calculate split indices
+        test_end = int(n * test_size)
+        val_end = test_end + int(n * val_size)
+        
+        # Take from different parts of the sorted list to ensure length diversity
+        test_seqs = sorted_sequences[:test_end] + sorted_sequences[test_end//2:test_end//2 + test_end//4]
+        val_seqs = sorted_sequences[test_end:test_end + (val_end - test_end)//2] + \
+                   sorted_sequences[test_end + (val_end - test_end)//2:test_end + (val_end - test_end)//4]
+        train_seqs = sorted_sequences[val_end:]
+        
+        # Shuffle each split
+        random.seed(42)
+        random.shuffle(train_seqs)
+        random.shuffle(val_seqs)
+        random.shuffle(test_seqs)
+    else:
+        # Original random splitting
+        data = list(sequences)
+        random.seed(42)
+        random.shuffle(data)
+        n = len(data)
+        te, va = int(n * test_size), int(n * val_size)
+        train_seqs = data[te+va:]
+        val_seqs = data[te:te+va]
+        test_seqs = data[:te]
+    
+    logger.info(f"Split with stratification: Train={len(train_seqs)}, Val={len(val_seqs)}, Test={len(test_seqs)}")
+    return train_seqs, val_seqs, test_seqs
 
 
 
