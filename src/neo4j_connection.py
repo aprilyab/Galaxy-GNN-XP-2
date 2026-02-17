@@ -47,20 +47,15 @@ class Neo4jExtractor:
         self.session = session
 
     def fetch_workflow_ids(self, limit: int = 1000, skip: int = 0) -> List[str]:
-        query = """
-        MATCH (w:Workflow)
-        RETURN w.workflow_id as workflow_id
-        ORDER BY w.workflow_id
-        SKIP $skip LIMIT $limit
-        """
-        result = self.session.run(query, skip=skip, limit=limit)
-        return [record["workflow_id"] for record in result]
+        query = "MATCH (w:Workflow) RETURN w.workflow_id as workflow_id ORDER BY w.workflow_id SKIP $skip LIMIT $limit"
+        return [r["workflow_id"] for r in self.session.run(query, skip=skip, limit=limit)]
 
     def fetch_batch_workflow_data(self, workflow_ids: List[str]) -> Dict[str, Dict[str, Any]]:
+        """Fetches recursive workflow step data using the STEP_FEEDS_INTO relationship."""
         query = """
         MATCH (w:Workflow)-[:HAS_STEP]->(s:Step)
         WHERE w.workflow_id IN $workflow_ids
-        OPTIONAL MATCH (s)-[:NEXT_STEP]->(next:Step)
+        OPTIONAL MATCH (s)-[:STEP_FEEDS_INTO]->(next:Step)
         OPTIONAL MATCH (s)-[:STEP_USES_TOOL]->(t:Tool)
         RETURN 
             w.workflow_id as workflow_id,
@@ -72,13 +67,11 @@ class Neo4jExtractor:
         """
         result = self.session.run(query, workflow_ids=workflow_ids)
         workflows_data = {wid: {} for wid in workflow_ids}
-        for record in result:
-            workflows_data[record["workflow_id"]][record["step_id"]] = {
-                "step_id": record["step_id"],
-                "name": record["step_name"],
-                "tool_id": record["tool_id"],
-                "tool_version": record["tool_version"],
-                "next_steps": record["next_step_ids"]
+        for r in result:
+            workflows_data[r["workflow_id"]][r["step_id"]] = {
+                "step_id": r["step_id"], "name": r["step_name"], 
+                "tool_id": r["tool_id"], "tool_version": r["tool_version"],
+                "next_steps": r["next_step_ids"]
             }
         return workflows_data
 
@@ -86,10 +79,32 @@ class Neo4jExtractor:
         skip = 0
         while True:
             workflow_ids = self.fetch_workflow_ids(limit=batch_size, skip=skip)
-            if not workflow_ids:
-                break
+            if not workflow_ids: break
             batch_data = self.fetch_batch_workflow_data(workflow_ids)
             for wid in workflow_ids:
                 yield wid, batch_data.get(wid, {})
             skip += batch_size
             logger.info(f"Extracted batch at offset {skip}")
+
+    def fetch_tool_connections(self) -> Generator[Dict[str, Any], None, None]:
+        """Extracts high-fidelity tool connections for connection-level sequence generation."""
+        query = """
+        MATCH (w:Workflow)-[:HAS_STEP]->(s1:Step)-[r:STEP_FEEDS_INTO]->(s2:Step)
+        WHERE w.workflow_id IS NOT NULL AND s1.step_id IS NOT NULL AND s2.step_id IS NOT NULL
+        OPTIONAL MATCH (s1)-[:STEP_USES_TOOL]->(t1:Tool)
+        OPTIONAL MATCH (s2)-[:STEP_USES_TOOL]->(t2:Tool)
+        RETURN 
+            w.workflow_id AS workflow_id, w.workflow_repository AS workflow_name,
+            COALESCE(w.created_at, "n/a") AS created_at,
+            s1.step_id AS source_step_id,
+            COALESCE(t1.tool_id, s1.name, "<INPUT_DATA>") AS source_tool_raw,
+            COALESCE(t1.version, "n/a") AS source_tool_version,
+            COALESCE(r.from_output_name, "output") AS source_output_name,
+            s2.step_id AS target_step_id,
+            COALESCE(t2.tool_id, s2.name, "<INPUT_DATA>") AS target_tool_raw,
+            COALESCE(t2.version, "n/a") AS target_tool_version,
+            COALESCE(r.input_name, "input") AS target_input_name
+        ORDER BY workflow_id, source_step_id
+        """
+        for record in self.session.run(query):
+            yield dict(record)
