@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from typing import List
-
 import sys
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

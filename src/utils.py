@@ -156,6 +156,8 @@ def split_workflows(sequences: List[List[str]], test_size: float = 0.15, val_siz
     """
     Enhanced split with stratification by sequence length for better distribution.
     """
+    logger = setup_logger("utils", "processing.log")
+    
     if stratify_by_length:
         # Sort by length for stratified splitting
         sorted_sequences = sorted(sequences, key=len)

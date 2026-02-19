@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 class Neo4jConfig(BaseModel):
     uri: str = Field(default_factory=lambda: os.getenv("NEO4J_URI", "bolt://localhost:7687"))
     user: str = Field(default_factory=lambda: os.getenv("NEO4J_USER", "neo4j"))
-    password: str = Field(default_factory=lambda: os.getenv("NEO4J_PASSWORD", "password"))
+    password: str = Field(default_factory=lambda: os.getenv("NEO4J_PASSWORD", "PASSWORD"))
 
 class StepMetadata(BaseModel):
     step_id: str

@@ -54,7 +54,6 @@ def extract_tool_metadata(tool_id: str, tool_version: str = None) -> Dict[str, A
     if "/" in tool_id:
         parts = tool_id.split("/")
         if len(parts) >= 3:
-            # Use repository owner as category hint
             repo_owner = parts[-4] if len(parts) >= 4 else 'unknown'
             metadata['category'] = repo_owner.lower()
     
@@ -84,7 +83,7 @@ def build_topo_sequence(connections: pd.DataFrame) -> List[str]:
         s_tool = str(row['source_tool'])
         t_tool = str(row['target_tool'])
         
-        # Map step ID to tool token (standardized)
+        # Map step ID to tool token 
         step_to_tool[s_id] = clean_tool_token(s_tool)
         step_to_tool[t_id] = clean_tool_token(t_tool)
         
@@ -162,7 +161,7 @@ def build_dataflow_sequence(connections: pd.DataFrame) -> List[str]:
             for neighbor in adj[node]:
                 in_degree[neighbor] -= 1
     
-    # Convert levels to sequence (parallel tools grouped)
+    # Convert levels to sequence
     sequence = []
     for level in levels:
         level_tools = [step_to_tool[node] for node in level if node in step_to_tool]
@@ -215,7 +214,6 @@ def generate_sequence_variants(connections: pd.DataFrame) -> List[List[str]]:
             
     except Exception as e:
         logger.warning(f"Error generating sequence variants: {e}")
-        # Fallback to basic topological sequence
         try:
             fallback_seq = build_topo_sequence(connections)
             if len(fallback_seq) >= 2:
@@ -246,8 +244,4 @@ def process_all_connections(tsv_path: Path) -> List[List[str]]:
     return sequences
 
 if __name__ == "__main__":
-    # Test on simulated data
-    TSV = Path("data/workflow_connections_simulated.tsv")
-    seqs = process_all_connections(TSV)
-    if seqs:
-        print(f"Sample Sequence: {seqs[0][:10]}")
+   main()

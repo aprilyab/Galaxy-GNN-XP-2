@@ -36,7 +36,7 @@ def main():
         with db.session() as session:
             extractor = Neo4jExtractor(session)
             
-            # --- 1. Connection-Level Extraction (High-Fidelity) ---
+            # Connection-Level Extraction (
             logger.info(f"Extracting tool connections to {args.connections_tsv}...")
             import csv
             from src.utils import strip_tool_version
