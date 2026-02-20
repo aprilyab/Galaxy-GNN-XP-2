@@ -1,0 +1,761 @@
+[
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx"
+    ],
+    "expected_next_tools": [
+      "Collapse Collection",
+      "Bowtie2",
+      "VSearch search",
+      "Zip collections",
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation"
+    ],
+    "expected_next_tools": [
+      "Concatenate datasets",
+      "compleasm",
+      "Merqury",
+      "TB Variant Report",
+      "NCBI BLAST+ blastn"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx"
+    ],
+    "expected_next_tools": [
+      "Collapse Collection",
+      "Bowtie2",
+      "VSearch search",
+      "Zip collections",
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation"
+    ],
+    "expected_next_tools": [
+      "Concatenate datasets",
+      "compleasm",
+      "Merqury",
+      "TB Variant Report",
+      "NCBI BLAST+ blastn"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation"
+    ],
+    "expected_next_tools": [
+      "Concatenate datasets",
+      "compleasm",
+      "Merqury",
+      "TB Variant Report",
+      "NCBI BLAST+ blastn"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation",
+      "Concatenate datasets"
+    ],
+    "expected_next_tools": [
+      "Filter",
+      "Volcano Plot",
+      "Map with minimap2",
+      "MMseqs2 Sequence Clustering"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation"
+    ],
+    "expected_next_tools": [
+      "Concatenate datasets",
+      "compleasm",
+      "Merqury",
+      "TB Variant Report",
+      "NCBI BLAST+ blastn"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation",
+      "Concatenate datasets"
+    ],
+    "expected_next_tools": [
+      "Filter",
+      "Volcano Plot",
+      "Map with minimap2",
+      "MMseqs2 Sequence Clustering"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM"
+    ],
+    "expected_next_tools": [
+      "Samtools fastx",
+      "MergeSamFiles",
+      "MACS2 callpeak",
+      "Samtools stats",
+      "MarkDuplicates"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx"
+    ],
+    "expected_next_tools": [
+      "Collapse Collection",
+      "Bowtie2",
+      "VSearch search",
+      "Zip collections",
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Map with BWA-MEM",
+      "Filter SAM or BAM, output SAM or BAM",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "MergeSamFiles",
+      "Samtools fastx"
+    ],
+    "expected_next_tools": [
+      "Collapse Collection",
+      "Bowtie2",
+      "VSearch search",
+      "Zip collections",
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "MergeSamFiles",
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "MergeSamFiles",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "MergeSamFiles",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "MergeSamFiles",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "MergeSamFiles",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length",
+      "Text transformation"
+    ],
+    "expected_next_tools": [
+      "Concatenate datasets",
+      "compleasm",
+      "Merqury",
+      "TB Variant Report",
+      "NCBI BLAST+ blastn"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Bowtie2",
+      "Samtools view"
+    ],
+    "expected_next_tools": [
+      "Samtools fastx"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Bowtie2",
+      "Samtools view",
+      "Samtools fastx"
+    ],
+    "expected_next_tools": [
+      "Collapse Collection",
+      "Bowtie2",
+      "VSearch search",
+      "Zip collections",
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Bowtie2",
+      "Samtools view",
+      "Samtools fastx",
+      "Collapse Collection"
+    ],
+    "expected_next_tools": [
+      "seqtk_sample",
+      "Proteinortho grab proteins",
+      "Replace",
+      "Merge collections",
+      "Select"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Bowtie2",
+      "Samtools view",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample"
+    ],
+    "expected_next_tools": [
+      "Create assemblies with Unicycler"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Bowtie2",
+      "Samtools view",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler"
+    ],
+    "expected_next_tools": [
+      "Bandage Info",
+      "Filter sequences by length",
+      "Bandage Image",
+      "Glimmer ICM builder",
+      "Antismash"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Bowtie2",
+      "Samtools view",
+      "Samtools fastx",
+      "Collapse Collection",
+      "seqtk_sample",
+      "Create assemblies with Unicycler",
+      "Filter sequences by length"
+    ],
+    "expected_next_tools": [
+      "Text transformation"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Group",
+      "Concatenate datasets"
+    ],
+    "expected_next_tools": [
+      "Text reformatting",
+      "IsoformSwitchAnalyzeR",
+      "IsoformSwitchAnalyzeR",
+      "FastQC",
+      "Group"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Group",
+      "Concatenate datasets",
+      "Text reformatting"
+    ],
+    "expected_next_tools": [
+      "Datamash",
+      "Cut",
+      "Concatenate datasets",
+      "Parse parameter value",
+      "Query Tabular"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Group",
+      "Concatenate datasets",
+      "Text reformatting",
+      "Datamash"
+    ],
+    "expected_next_tools": [
+      "Concatenate datasets",
+      "Join",
+      "Datamash",
+      "Paste",
+      "Scatterplot w ggplot2"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Group",
+      "Concatenate datasets",
+      "Text reformatting",
+      "Datamash",
+      "Concatenate datasets"
+    ],
+    "expected_next_tools": [
+      "Paste",
+      "Purge overlaps",
+      "OTUTable",
+      "Map with minimap2",
+      "Busco"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Group",
+      "Concatenate datasets",
+      "Text reformatting",
+      "Datamash",
+      "Concatenate datasets",
+      "Paste"
+    ],
+    "expected_next_tools": [
+      "Paste",
+      "Text reformatting",
+      "table rename column",
+      "Pick parameter value",
+      "Compute"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Group",
+      "Concatenate datasets",
+      "Text reformatting",
+      "Datamash",
+      "Concatenate datasets",
+      "Paste",
+      "Pick parameter value"
+    ],
+    "expected_next_tools": [
+      "Hifiasm",
+      "Paste",
+      "Samtools stats",
+      "Sambamba flagstat",
+      "Scanpy filter"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Cut",
+      "Parse parameter value"
+    ],
+    "expected_next_tools": [
+      "Compose text parameter value",
+      "gfastats",
+      "Purge overlaps",
+      "gfastats",
+      "Scanpy plot"
+    ]
+  },
+  {
+    "context": [
+      null,
+      "Cut",
+      "Parse parameter value",
+      "Compose text parameter value"
+    ],
+    "expected_next_tools": [
+      "SnpSift Filter",
+      "Replace",
+      "Filter",
+      "Create text file",
+      "Add line to file"
+    ]
+  }
+]
